@@ -32,7 +32,7 @@ body {
 .center-content {
     text-align: center;
     position: relative;
-    padding: 20px; /* Add padding for small screens */
+    padding: 20px; 
 }
 
 h1 {
@@ -78,20 +78,19 @@ button:hover {
     }
 }
 
-/* Media Query for mobile devices */
 @media screen and (max-width: 600px) {
     h1 {
-        font-size: 2.5em; /* Reduce font size on smaller screens */
+        font-size: 2.5em; 
         letter-spacing: 2px;
     }
 
     button {
-        font-size: 1em; /* Reduce button font size */
+        font-size: 1em; 
         padding: 8px 20px;
     }
 
     .logo {
-        width: 40px; /* Reduce logo size */
+        width: 40px; 
         top: 15px;
         left: 15px;
     }
