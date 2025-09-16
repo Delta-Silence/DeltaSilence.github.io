@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap');
 
 :root {
-    --primary-color: #00eaff; /* Cyan */
-    --secondary-color: #ff00ff; /* Magenta */
+    --primary-color: #00eaff;
+    --secondary-color: #ff00ff;
     --background-color: #0a0a0a;
     --text-color: #f0f0f0;
 }
@@ -32,6 +32,7 @@ body {
 .center-content {
     text-align: center;
     position: relative;
+    padding: 20px; /* Add padding for small screens */
 }
 
 h1 {
@@ -74,5 +75,24 @@ button:hover {
     }
     to {
         text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.7);
+    }
+}
+
+/* Media Query for mobile devices */
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 2.5em; /* Reduce font size on smaller screens */
+        letter-spacing: 2px;
+    }
+
+    button {
+        font-size: 1em; /* Reduce button font size */
+        padding: 8px 20px;
+    }
+
+    .logo {
+        width: 40px; /* Reduce logo size */
+        top: 15px;
+        left: 15px;
     }
 }
