@@ -33,6 +33,12 @@ body {
     text-align: center;
     position: relative;
     padding: 20px;
+    max-width: 900px;
+}
+
+.policy-text {
+    text-align: left;
+    margin-top: 20px;
 }
 
 h1 {
@@ -47,12 +53,31 @@ h1 {
     animation: glow 2s ease-in-out infinite alternate;
 }
 
+h2 {
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-top: 30px;
+}
+
 p {
     font-size: 1.2em;
     line-height: 1.6;
     color: var(--primary-color);
-    max-width: 800px;
     margin: 20px auto;
+}
+
+ul {
+    list-style-position: outside;
+    padding-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+    text-align: left;
+    color: var(--primary-color);
+}
+
+ul li {
+    margin-bottom: 10px;
 }
 
 button {
