@@ -2,9 +2,9 @@
   "last_updated": "2025-10-30T20:00:00Z",
   "notes": "All systems nominal. Tactical Frontlines patch rolling out 21:00 UTC.",
   "services": {
-    "Sights of Iron": "Online",
+    "Sights of Iron": "Maintenance",
     "Tactical Frontlines": "Maintenance",
-    "Six Chambers Roulette": "Offline"
+    "Six Chambers Roulette": "Maintenance"
   },
   "details": {
     "Sights of Iron": "Matchmaking and inventory are healthy.",
