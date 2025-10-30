@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delta Silence | Service Status</title>
+
+  <!-- Your CSS + Favicon (no PHP since GitHub Pages is static) -->
+  <link rel="stylesheet" href="https://sightsofiron.com/style.css">
+  <link rel="icon" href="/logo.png" type="image/x-icon">
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0d10; --card:#12151a; --muted:#9aa3ad; --border:#1e2228;
+      --ok:#00c776; --maint:#ffa726; --down:#e53935; --accent:#00bcd4;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:radial-gradient(1000px 600px at 50% -200px,#151922,#0b0d10);
+      color:#fff; font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; font-weight:800;
+      min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    }
+    header{width:100%; max-width:980px; padding:36px 20px 14px; text-align:center}
+    header h1{margin:0; font-size:2.2rem; letter-spacing:.5px}
+    header p{margin:8px 0 0; font-weight:600; color:var(--muted); font-size:.95rem}
+    .wrap{width:100%; max-width:980px; padding:18px 20px 80px}
+    .legend{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:22px 0 10px;
+      font-weight:800; color:var(--muted); font-size:.85rem;
+    }
+    .legend span{display:inline-flex; align-items:center; gap:8px}
+    .dot{width:10px; height:10px; border-radius:50%}
+    .dot.ok{background:var(--ok)} .dot.maint{background:var(--maint)} .dot.down{background:var(--down)}
+    .card{
+      background:linear-gradient(180deg,#151a22 0%,#12151a 100%);
+      border:1px solid var(--border); border-radius:var(--radius);
+      box-shadow:var(--shadow); padding:18px 18px; margin:14px 0;
+    }
+    .row{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .name{font-size:1.35rem}
+    .status-badge{
+      display:inline-block; padding:8px 14px; border-radius:10px; font-size:.95rem; font-weight:800;
+    }
+    .online{background:var(--ok); color:#03160f}
+    .maintenance{background:var(--maint); color:#2b1900}
+    .offline{background:var(--down); color:#fff}
+    .meta{margin-top:8px; color:var(--muted); font-weight:600; font-size:.85rem}
+    .last-updated{margin-top:22px; text-align:center; color:var(--muted); font-weight:600; font-size:.9rem}
+    footer{margin-top:auto; width:100%; text-align:center; padding:22px; border-top:1px solid var(--border); color:#7f8893; font-size:.85rem}
+    .btn-retry{
+      display:inline-block; margin-top:12px; padding:10px 14px; border-radius:10px;
+      border:1px solid var(--border); background:#0f1318; color:#cfd6de; cursor:pointer;
+      font-weight:800;
+    }
+    .btn-retry:hover{border-color:var(--accent); color:#fff}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Delta Silence Service Status</h1>
+    <p>Live health for Sights of Iron • Tactical Frontlines • Six Chambers Roulette</p>
+  </header>
+
+  <div class="wrap">
+    <div class="legend">
+      <span><i class="dot ok"></i> Online</span>
+      <span><i class="dot maint"></i> Maintenance</span>
+      <span><i class="dot down"></i> Offline</span>
+    </div>
+
+    <div id="cards"></div>
+    <div id="updated" class="last-updated"></div>
+
+    <div id="error" style="display:none; text-align:center; margin-top:18px;">
+      <div style="color:#ff8181; font-weight:800;">Failed to load status.json</div>
+      <button class="btn-retry" onclick="loadStatus()">Try Again</button>
+    </div>
+  </div>
+
+  <footer>© 2025 Delta Silence • Status powered by GitHub JSON</footer>
+
+  <script>
+    // JSON hosted by your repo
+    const JSON_URL = "https://Delta-Silence.github.io/status.json/status.json";
+
+    const serviceOrder = ["Sights of Iron","Tactical Frontlines","Six Chambers Roulette"];
+
+    function badgeClass(status){
+      const s = (status||"").toLowerCase();
+      if(s==="online") return "online";
+      if(s==="maintenance") return "maintenance";
+      return "offline";
+    }
+    function textFor(status){
+      const s = (status||"").toLowerCase();
+      if(s==="online") return "🟢 ONLINE";
+      if(s==="maintenance") return "🟠 MAINTENANCE";
+      return "🔴 OFFLINE";
+    }
+    function fmtTime(ts){
+      try{
+        const d = new Date(ts);
+        if(isNaN(d.getTime())) return "";
+        return d.toLocaleString();
+      }catch{ return ""; }
+    }
+
+    async function loadStatus(){
+      const cards = document.getElementById("cards");
+      const updated = document.getElementById("updated");
+      const err = document.getElementById("error");
+      err.style.display = "none";
+
+      try{
+        const res = await fetch(JSON_URL, {cache:"no-store"});
+        if(!res.ok) throw new Error(res.status + " " + res.statusText);
+        const data = await res.json();
+
+        cards.innerHTML = "";
+        const srv = data.services || {};
+        const notes = data.notes || "";
+        const last = data.last_updated ? fmtTime(data.last_updated) : "";
+
+        // fixed display order
+        serviceOrder.forEach(name=>{
+          const status = srv[name] || "Offline";
+          const cls = badgeClass(status);
+          const help = (data.details && data.details[name]) ? data.details[name] : "";
+
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="row">
+              <div class="name">${name}</div>
+              <div class="status-badge ${cls}">${textFor(status)}</div>
+            </div>
+            <div class="meta">${help || "&nbsp;"}</div>
+          `;
+          cards.appendChild(card);
+        });
+
+        updated.textContent = `Last updated: ${last || "now"}` + (notes ? ` • ${notes}` : "");
+      }catch(e){
+        console.error(e);
+        err.style.display = "block";
+      }
+    }
+
+    loadStatus();
+    setInterval(loadStatus, 30000); // refresh every 30s
+  </script>
+</body>
+</html>
