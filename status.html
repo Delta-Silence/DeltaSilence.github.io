@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Delta Silence | Service Status</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Delta Silence • Service Status</title>
 
-  <!-- Your CSS + Favicon (no PHP since GitHub Pages is static) -->
+  <!-- Optional: your site CSS + favicon (GitHub Pages is static, no PHP) -->
   <link rel="stylesheet" href="https://sightsofiron.com/style.css">
   <link rel="icon" href="/logo.png" type="image/x-icon">
 
@@ -14,140 +14,264 @@
 
   <style>
     :root{
-      --bg:#0b0d10; --card:#12151a; --muted:#9aa3ad; --border:#1e2228;
-      --ok:#00c776; --maint:#ffa726; --down:#e53935; --accent:#00bcd4;
-      --shadow:0 12px 30px rgba(0,0,0,.45);
-      --radius:14px;
+      --bg: #0b0d10;
+      --bg2:#0f1318;
+      --card:#12151a;
+      --muted:#9aa3ad;
+      --border:#1e2228;
+      --ok:#00c776;      /* Online */
+      --maint:#ffa726;   /* Maintenance */
+      --down:#e53935;    /* Offline */
+      --accent:#00bcd4;
+      --radius:16px;
+      --shadow: 0 18px 40px rgba(0,0,0,.55);
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin:0; background:radial-gradient(1000px 600px at 50% -200px,#151922,#0b0d10);
-      color:#fff; font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; font-weight:800;
-      min-height:100vh; display:flex; flex-direction:column; align-items:center;
+      margin:0;
+      background:
+        radial-gradient(1200px 700px at 50% -250px, #16202a 0%, #0b0d10 55%),
+        linear-gradient(180deg, #0b0d10 0%, #0a0e13 100%);
+      color:#fff;
+      font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:36px 18px;
     }
-    header{width:100%; max-width:980px; padding:36px 20px 14px; text-align:center}
-    header h1{margin:0; font-size:2.2rem; letter-spacing:.5px}
-    header p{margin:8px 0 0; font-weight:600; color:var(--muted); font-size:.95rem}
-    .wrap{width:100%; max-width:980px; padding:18px 20px 80px}
+
+    /* Centered container */
+    .shell{
+      width:100%;
+      max-width: 780px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:22px;
+      text-align:center;
+    }
+
+    /* Header */
+    .brand{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+    .brand h1{
+      margin:0;
+      font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+      letter-spacing:.6px;
+    }
+    .brand p{
+      margin:0;
+      color:var(--muted);
+      font-weight:700;
+      font-size:.95rem;
+      line-height:1.4;
+    }
+
+    /* Legend */
     .legend{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:22px 0 10px;
-      font-weight:800; color:var(--muted); font-size:.85rem;
+      display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
+      color:var(--muted); font-size:.85rem; font-weight:800; margin-top:6px;
     }
-    .legend span{display:inline-flex; align-items:center; gap:8px}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid var(--border); border-radius:999px; background:#0f141a}
     .dot{width:10px; height:10px; border-radius:50%}
-    .dot.ok{background:var(--ok)} .dot.maint{background:var(--maint)} .dot.down{background:var(--down)}
+    .ok{background:var(--ok)} .maint{background:var(--maint)} .down{background:var(--down)}
+
+    /* Cards wrapper */
+    .stack{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      margin-top:6px;
+    }
+
+    /* Card */
     .card{
-      background:linear-gradient(180deg,#151a22 0%,#12151a 100%);
-      border:1px solid var(--border); border-radius:var(--radius);
-      box-shadow:var(--shadow); padding:18px 18px; margin:14px 0;
+      background: linear-gradient(180deg, #151a22 0%, #12151a 100%);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px 18px;
+      text-align:left;
     }
-    .row{display:flex; align-items:center; justify-content:space-between; gap:16px}
-    .name{font-size:1.35rem}
-    .status-badge{
-      display:inline-block; padding:8px 14px; border-radius:10px; font-size:.95rem; font-weight:800;
+    .row{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
     }
-    .online{background:var(--ok); color:#03160f}
-    .maintenance{background:var(--maint); color:#2b1900}
-    .offline{background:var(--down); color:#fff}
-    .meta{margin-top:8px; color:var(--muted); font-weight:600; font-size:.85rem}
-    .last-updated{margin-top:22px; text-align:center; color:var(--muted); font-weight:600; font-size:.9rem}
-    footer{margin-top:auto; width:100%; text-align:center; padding:22px; border-top:1px solid var(--border); color:#7f8893; font-size:.85rem}
-    .btn-retry{
-      display:inline-block; margin-top:12px; padding:10px 14px; border-radius:10px;
-      border:1px solid var(--border); background:#0f1318; color:#cfd6de; cursor:pointer;
+    .name{font-size:1.25rem}
+    .badge{
+      display:inline-block; padding:8px 14px; border-radius:12px; font-size:.95rem;
+      font-weight:800; white-space:nowrap;
+    }
+    .online{ background:var(--ok); color:#042317 }
+    .maintenance{ background:var(--maint); color:#2e1e00 }
+    .offline{ background:var(--down); color:#fff }
+    .meta{ margin-top:8px; color:var(--muted); font-weight:700; font-size:.9rem }
+
+    /* Last updated + notes */
+    .updated{
+      color:var(--muted);
+      font-weight:700;
+      font-size:.9rem;
+      margin-top:6px;
+    }
+
+    /* Error + retry */
+    .error{
+      display:none;
+      width:100%;
+      border:1px solid #402222;
+      background:#1a0f0f;
+      color:#ff9b9b;
+      border-radius:12px;
+      padding:12px 14px;
       font-weight:800;
     }
-    .btn-retry:hover{border-color:var(--accent); color:#fff}
+    .retry{
+      margin-top:10px;
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:12px;
+      background:var(--bg2);
+      border:1px solid var(--border);
+      color:#cfd6de;
+      cursor:pointer;
+    }
+    .retry:hover{ border-color:var(--accent); color:#fff }
+
+    /* Footer */
+    footer{
+      margin-top: 10px;
+      color:#7f8893;
+      font-size:.85rem;
+    }
+
+    /* Loading shimmer */
+    .skeleton{
+      position:relative; overflow:hidden;
+      background:#0f1318; border:1px solid var(--border);
+      border-radius: var(--radius); height:74px;
+    }
+    .skeleton::after{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.06) 50%, transparent 100%);
+      animation: shimmer 1.2s infinite;
+    }
+    @keyframes shimmer{
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Delta Silence Service Status</h1>
-    <p>Live health for Sights of Iron • Tactical Frontlines • Six Chambers Roulette</p>
-  </header>
+  <main class="shell">
+    <!-- Header -->
+    <div class="brand">
+      <h1>Delta Silence • Service Status</h1>
+      <p>Live health for Sights of Iron • Tactical Frontlines • Six Chambers Roulette</p>
+    </div>
 
-  <div class="wrap">
+    <!-- Legend -->
     <div class="legend">
-      <span><i class="dot ok"></i> Online</span>
-      <span><i class="dot maint"></i> Maintenance</span>
-      <span><i class="dot down"></i> Offline</span>
+      <span class="pill"><i class="dot ok"></i> Online</span>
+      <span class="pill"><i class="dot maint"></i> Maintenance</span>
+      <span class="pill"><i class="dot down"></i> Offline</span>
     </div>
 
-    <div id="cards"></div>
-    <div id="updated" class="last-updated"></div>
+    <!-- Cards (centered column) -->
+    <section id="cards" class="stack" aria-live="polite">
+      <!-- Shimmer placeholders while loading -->
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </section>
 
-    <div id="error" style="display:none; text-align:center; margin-top:18px;">
-      <div style="color:#ff8181; font-weight:800;">Failed to load status.json</div>
-      <button class="btn-retry" onclick="loadStatus()">Try Again</button>
+    <!-- Last updated + notes -->
+    <div id="updated" class="updated"></div>
+
+    <!-- Error -->
+    <div id="error" class="error">
+      Failed to load status.json. Check your GitHub Pages URL or JSON validity.
+      <div><button class="retry" onclick="loadStatus()">Try again</button></div>
     </div>
-  </div>
 
-  <footer>© 2025 Delta Silence • Status powered by GitHub JSON</footer>
+    <!-- Footer -->
+    <footer>© 2025 Delta Silence — Status powered by GitHub JSON</footer>
+  </main>
 
   <script>
-    // JSON hosted by your repo
+    // Point to your GitHub Pages JSON
+    // Repo you shared: https://github.com/Delta-Silence/status.json
+    // Pages URL for JSON: https://Delta-Silence.github.io/status.json/status.json
     const JSON_URL = "https://Delta-Silence.github.io/status.json/status.json";
 
-    const serviceOrder = ["Sights of Iron","Tactical Frontlines","Six Chambers Roulette"];
+    const ORDER = ["Sights of Iron","Tactical Frontlines","Six Chambers Roulette"];
 
-    function badgeClass(status){
-      const s = (status||"").toLowerCase();
-      if(s==="online") return "online";
-      if(s==="maintenance") return "maintenance";
+    const elCards   = document.getElementById("cards");
+    const elUpdated = document.getElementById("updated");
+    const elError   = document.getElementById("error");
+
+    function badgeClass(s){
+      const x = (s||"").toLowerCase();
+      if(x==="online") return "online";
+      if(x==="maintenance") return "maintenance";
       return "offline";
     }
-    function textFor(status){
-      const s = (status||"").toLowerCase();
-      if(s==="online") return "🟢 ONLINE";
-      if(s==="maintenance") return "🟠 MAINTENANCE";
+    function badgeText(s){
+      const x = (s||"").toLowerCase();
+      if(x==="online") return "🟢 ONLINE";
+      if(x==="maintenance") return "🟠 MAINTENANCE";
       return "🔴 OFFLINE";
     }
-    function fmtTime(ts){
+    function fmt(ts){
       try{
         const d = new Date(ts);
-        if(isNaN(d.getTime())) return "";
+        if(isNaN(d)) return "";
         return d.toLocaleString();
-      }catch{ return ""; }
+      } catch { return ""; }
     }
 
     async function loadStatus(){
-      const cards = document.getElementById("cards");
-      const updated = document.getElementById("updated");
-      const err = document.getElementById("error");
-      err.style.display = "none";
+      // reset error
+      elError.style.display = "none";
 
       try{
-        const res = await fetch(JSON_URL, {cache:"no-store"});
+        const res = await fetch(JSON_URL, { cache: "no-store" });
         if(!res.ok) throw new Error(res.status + " " + res.statusText);
         const data = await res.json();
 
-        cards.innerHTML = "";
-        const srv = data.services || {};
-        const notes = data.notes || "";
-        const last = data.last_updated ? fmtTime(data.last_updated) : "";
+        const services = data.services || {};
+        const details  = data.details || {};
+        const notes    = data.notes || "";
+        const last     = data.last_updated ? fmt(data.last_updated) : "";
 
-        // fixed display order
-        serviceOrder.forEach(name=>{
-          const status = srv[name] || "Offline";
-          const cls = badgeClass(status);
-          const help = (data.details && data.details[name]) ? data.details[name] : "";
+        // Build centered stack
+        elCards.innerHTML = "";
+        ORDER.forEach(name=>{
+          const status = services[name] || "Offline";
+          const help   = details[name] || "";
 
-          const card = document.createElement("div");
+          const card = document.createElement("article");
           card.className = "card";
           card.innerHTML = `
             <div class="row">
               <div class="name">${name}</div>
-              <div class="status-badge ${cls}">${textFor(status)}</div>
+              <div class="badge ${badgeClass(status)}">${badgeText(status)}</div>
             </div>
             <div class="meta">${help || "&nbsp;"}</div>
           `;
-          cards.appendChild(card);
+          elCards.appendChild(card);
         });
 
-        updated.textContent = `Last updated: ${last || "now"}` + (notes ? ` • ${notes}` : "");
-      }catch(e){
-        console.error(e);
-        err.style.display = "block";
+        elUpdated.textContent = `Last updated: ${last || "n/a"}${notes ? " • " + notes : ""}`;
+      }catch(err){
+        console.error(err);
+        elError.style.display = "block";
       }
     }
 
