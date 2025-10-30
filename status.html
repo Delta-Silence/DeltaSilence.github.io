@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Delta Silence • Service Status</title>
 
-  <!-- Optional: your site CSS + favicon (GitHub Pages is static, no PHP) -->
   <link rel="stylesheet" href="https://sightsofiron.com/style.css">
   <link rel="icon" href="/logo.png" type="image/x-icon">
 
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
 
   <style>
@@ -19,9 +17,9 @@
       --card:#12151a;
       --muted:#9aa3ad;
       --border:#1e2228;
-      --ok:#00c776;      /* Online */
-      --maint:#ffa726;   /* Maintenance */
-      --down:#e53935;    /* Offline */
+      --ok:#00c776;      
+      --maint:#ffa726;   
+      --down:#e53935;    
       --accent:#00bcd4;
       --radius:16px;
       --shadow: 0 18px 40px rgba(0,0,0,.55);
@@ -42,7 +40,6 @@
       padding:36px 18px;
     }
 
-    /* Centered container */
     .shell{
       width:100%;
       max-width: 780px;
@@ -53,7 +50,6 @@
       text-align:center;
     }
 
-    /* Header */
     .brand{
       display:flex;
       flex-direction:column;
@@ -73,7 +69,6 @@
       line-height:1.4;
     }
 
-    /* Legend */
     .legend{
       display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
       color:var(--muted); font-size:.85rem; font-weight:800; margin-top:6px;
@@ -82,7 +77,6 @@
     .dot{width:10px; height:10px; border-radius:50%}
     .ok{background:var(--ok)} .maint{background:var(--maint)} .down{background:var(--down)}
 
-    /* Cards wrapper */
     .stack{
       width:100%;
       display:flex;
@@ -91,7 +85,6 @@
       margin-top:6px;
     }
 
-    /* Card */
     .card{
       background: linear-gradient(180deg, #151a22 0%, #12151a 100%);
       border:1px solid var(--border);
@@ -113,7 +106,6 @@
     .offline{ background:var(--down); color:#fff }
     .meta{ margin-top:8px; color:var(--muted); font-weight:700; font-size:.9rem }
 
-    /* Last updated + notes */
     .updated{
       color:var(--muted);
       font-weight:700;
@@ -121,7 +113,6 @@
       margin-top:6px;
     }
 
-    /* Error + retry */
     .error{
       display:none;
       width:100%;
@@ -151,7 +142,6 @@
       font-size:.85rem;
     }
 
-    /* Loading shimmer */
     .skeleton{
       position:relative; overflow:hidden;
       background:#0f1318; border:1px solid var(--border);
@@ -170,44 +160,34 @@
 </head>
 <body>
   <main class="shell">
-    <!-- Header -->
     <div class="brand">
       <h1>Delta Silence • Service Status</h1>
       <p>Live health for Sights of Iron • Tactical Frontlines • Six Chambers Roulette</p>
     </div>
 
-    <!-- Legend -->
     <div class="legend">
       <span class="pill"><i class="dot ok"></i> Online</span>
       <span class="pill"><i class="dot maint"></i> Maintenance</span>
       <span class="pill"><i class="dot down"></i> Offline</span>
     </div>
 
-    <!-- Cards (centered column) -->
     <section id="cards" class="stack" aria-live="polite">
-      <!-- Shimmer placeholders while loading -->
       <div class="skeleton"></div>
       <div class="skeleton"></div>
       <div class="skeleton"></div>
     </section>
 
-    <!-- Last updated + notes -->
     <div id="updated" class="updated"></div>
 
-    <!-- Error -->
     <div id="error" class="error">
       Failed to load status.json. Check your GitHub Pages URL or JSON validity.
       <div><button class="retry" onclick="loadStatus()">Try again</button></div>
     </div>
 
-    <!-- Footer -->
-    <footer>© 2025 Delta Silence — Status powered by GitHub JSON</footer>
+    <footer>© 2025 Delta Silence</footer>
   </main>
 
   <script>
-    // Point to your GitHub Pages JSON
-    // Repo you shared: https://github.com/Delta-Silence/status.json
-    // Pages URL for JSON: https://Delta-Silence.github.io/status.json/status.json
     const JSON_URL = "https://raw.githubusercontent.com/Delta-Silence/DeltaSilence.github.io/main/status.json";
 
     const ORDER = ["Sights of Iron","Tactical Frontlines","Six Chambers Roulette"];
@@ -237,7 +217,6 @@
     }
 
     async function loadStatus(){
-      // reset error
       elError.style.display = "none";
 
       try{
@@ -250,7 +229,6 @@
         const notes    = data.notes || "";
         const last     = data.last_updated ? fmt(data.last_updated) : "";
 
-        // Build centered stack
         elCards.innerHTML = "";
         ORDER.forEach(name=>{
           const status = services[name] || "Offline";
@@ -276,7 +254,7 @@
     }
 
     loadStatus();
-    setInterval(loadStatus, 30000); // refresh every 30s
+    setInterval(loadStatus, 30000);
   </script>
 </body>
 </html>
