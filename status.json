@@ -2,9 +2,9 @@
   "last_updated": "2025-10-30T20:00:00Z",
   "notes": "All systems Normal!"
   "services": {
-    "Sights of Iron": "Offline",
-    "Tactical Frontlines": "Offline",
-    "Six Chambers Roulette": "Offline"
+    "Sights of Iron": "Maintenance",
+    "Tactical Frontlines": "Maintenance",
+    "Six Chambers Roulette": "Maintenance"
   },
   "details": {
     "Sights of Iron": "Currently Under Development!",
